@@ -1,84 +1,116 @@
 <template>
 <div id="simulador" class="jumbotron">
-    <h2>Simulador</h2>
     <div class="container">
+    <h2>Simulador</h2>
+        <div class="row" v-if="mensagem">
+            <div class="col-12 col-lg-6 mensagem">
+                <div class="alert" :class="'alert-' + mensagem.tipo">
+                    {{mensagem.descricao}}
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-12 col-lg-6">
-                <form class="needs-validation" @submit.prevent="validaForm" novalidate>
                     <div class="form-group">
                         <label for="valor">Qual o valor desejado para o empréstimo?*</label>
-                        <input type="text" v-validate="'required|max_value:100000'" :class="{'form-control': true, 'is-invalid': errors.has('valor')}" id="valor" name="valor" v-mask="'money'">
-                        <small id="valorEmprestimo" class="form-text text-muted">Digite um valor entre R$ 0 e R$ 100.000,00</small>
+                        <vue-numeric currency="R$" separator="." id="valor" name="valor" value=""
+                            :class="{'form-control': true, 'is-invalid': errors.has('valor')}"
+                            v-validate="'required|decimal:2|min_value:0|max_value:100000'"
+                            v-model="valor" :minus="false" :min="0" :max="100000" :precision="2" :empty-value="0">
+                        </vue-numeric>
+                        <small class="form-text text-muted">Digite um valor entre R$ 0 e R$ 100.000,00</small>
                         <small v-show="errors.has('valor')" class="text-danger">
                             {{ errors.first('valor') }}
                         </small>
                     </div>
 
                     <div class="form-group">
-                        <label for="meses">Qual a quantidade de meses para o pagamento?*</label>
-                        <select class="form-control" id="meses">
-                            <option value="3">3 meses</option>
-                            <option value="4">4 meses</option>
-                            <option value="5">5 meses</option>
-                            <option value="6">6 meses</option>
-                            <option value="7">7 meses</option>
-                            <option value="8">8 meses</option>
-                            <option value="9">9 meses</option>
-                            <option value="10">10 meses</option>
-                            <option value="11">11 meses</option>
-                            <option value="12">12 meses</option>
-                        </select>
+                        <label for="prazo">Qual a quantidade de meses para o pagamento?*</label>
+                        <vue-numeric id="prazo" name="prazo" value=""
+                            :class="{'form-control': true, 'is-invalid': errors.has('prazo')}"
+                            v-validate="'required|min_value:3|max_value:12'"
+                            v-model="prazo" :minus="false" :min="3" :max="12" :empty-value="3">
+                        </vue-numeric>
+                        <small class="form-text text-muted">Digite um prazo entre 3 e 12 meses</small>
+                        <small v-show="errors.has('prazo')" class="text-danger">
+                            {{ errors.first('prazo') }}
+                        </small>
                     </div>
 
                     <div class="form-group">
                         <label for="juros">Qual a taxa de juros (% ao mês)?*</label>
-                        <input type="text" name="juros" v-validate="'required|decimal:2|min_value:3|max_value:8'" :class="{'form-control': true, 'is-invalid': errors.has('juros')}" id="juros">
-                        <small id="valorEmprestimo" class="form-text text-muted">Digite um valor entre 3% e 8%</small>
+                        <vue-numeric :precision="2" :min="3" :max="8" :empty-value="3" separator="."
+                            :class="{'form-control': true, 'is-invalid': errors.has('juros')}" name="juros" id="juros" value=""
+                            v-model="juros" v-validate="'required|decimal:2|min_value:3|max_value:8'">
+                        </vue-numeric>
+                        <small class="form-text text-muted">Digite um valor entre 3% e 8%</small>
                         <small v-show="errors.has('juros')" class="text-danger">
                             {{ errors.first('juros') }}
                         </small>
                     </div>
 
-                    <button type="submit" class="btn btn-info">SOLICITAR PROPOSTA DE EMPRÉSTIMO</button>
-                </form>
+                    <div class="form-group" v-if="prestacao">
+                        <div class="alert alert-info">
+                            Prestação: {{prazo}}x iguais de <strong>{{prestacao | currency}}</strong>.
+                        </div>
+                    </div>
             </div>
         </div>
-    </div>
-    <div class="card">
-        <pre>
-            {{errors.items}}
-        </pre>
+        <div class="row">
+            <div class="col-12 col-lg-6">
+            <button type="submit" class="btn btn-primary" @click="solicitaEmprestimo()">SOLICITAR EMPRÉSTIMO</button>
+            </div>
+        </div>
     </div>
 </div>
 </template>
 
 <script>
 import AwesomeMask from 'awesome-mask'
+import router from '../router'
 
 export default {
   name: 'Simulador',
+
   data () {
-    return {}
+    return {
+      valor: 0,
+      prazo: 0,
+      juros: 0,
+      mensagem: ''
+    }
   },
   directives: {
     'mask': AwesomeMask
   },
+  computed: {
+    prestacao: function () {
+      return this.calculoPrestacao(this.valor, this.juros, this.prazo)
+    }
+  },
   methods: {
-    validaForm () {
+    solicitaEmprestimo () {
       this.$validator.validateAll().then((result) => {
         if (result) {
+          router.push({ name: 'solicita-emprestimo' })
           return
         }
-        this.simular()
+        this.mensagem = { tipo: 'danger', descricao: 'Favor preencher o formulário corretamente.' }
       })
     },
-    simular () {
-      console.log('Enviado')
+    calculoPrestacao (valor, juros, prazo) {
+      return Number((valor * (juros / 100)) / (1 - (1 / (Math.pow((1 + (juros / 100)), prazo))))).toFixed(2)
     }
   }
 }
 </script>
 
 <style scoped>
-
+.prestacao{
+    margin-top: 30px;
+}
+h2 {
+    font-size: 2rem;
+    font-weight: bold;
+}
 </style>

@@ -2,7 +2,7 @@
 <div id="home">
   <div class="container">
     <div style="margin-top: 2rem; padding-bottom: 1rem;"><h1> {{ msg }}</h1></div>
-    <h3><router-link to="/simulador">Simulador</router-link></h3>
+    <h3><router-link :to="{ name: 'simulador' }">Simulador</router-link></h3>
   <!-- Alerts -->
   <h2>Alerts</h2>
   <div style="padding: 1rem;">
