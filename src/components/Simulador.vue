@@ -1,7 +1,7 @@
 <template>
-<div id="simulador" class="jumbotron">
+<div id="simulador">
     <div class="container">
-    <h2>Simulador</h2>
+        <h2>Simulador</h2>
         <div class="row" v-if="mensagem">
             <div class="col-12 col-lg-6 mensagem">
                 <div class="alert" :class="'alert-' + mensagem.tipo">
@@ -58,7 +58,9 @@
         </div>
         <div class="row">
             <div class="col-12 col-lg-6">
-            <button type="submit" class="btn btn-primary" @click="solicitaEmprestimo()">SOLICITAR EMPRÉSTIMO</button>
+                <button type="submit" class="btn btn-primary" @click="solicitaEmprestimo()">
+                    SOLICITAR EMPRÉSTIMO
+                </button>
             </div>
         </div>
     </div>
@@ -90,6 +92,10 @@ export default {
   },
   methods: {
     solicitaEmprestimo () {
+      if (!this.valor > 0) {
+        this.mensagem = { tipo: 'danger', descricao: 'O valor do empréstimo tem que ser maior que 0.' }
+        return
+      }
       this.$validator.validateAll().then((result) => {
         if (result) {
           router.push({ name: 'solicita-emprestimo' })
@@ -105,12 +111,8 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .prestacao{
     margin-top: 30px;
-}
-h2 {
-    font-size: 2rem;
-    font-weight: bold;
 }
 </style>
