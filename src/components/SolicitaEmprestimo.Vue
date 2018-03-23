@@ -15,7 +15,8 @@
               <form @submit.prevent="enviaSolicitacao()">
                     <div class="form-group">
                         <label for="email">Email*</label>
-                        <input type="email" name="email" id="email" class="form-control" />
+                        <input type="email" name="email" id="email" :class="{'form-control': true, 'is-invalid': errors.has('email')}"
+                        @input="empresa.email = $event.target.value" v-validate="'required|email'" />
                         <small v-show="errors.has('email')" class="text-danger">
                             {{ errors.first('email') }}
                         </small>
@@ -23,7 +24,8 @@
 
                     <div class="form-group">
                         <label for="cnpj">CNPJ*</label>
-                        <input type="text" name="cnpj" id="cnpj" class="form-control">
+                        <input type="text" name="cnpj" id="cnpj" :class="{'form-control': true, 'is-invalid': errors.has('cnpj')}"
+                        @input="empresa.cnpj = $event.target.value" v-mask="'99.999.999/9999-99'" v-validate="'required'"/>
                         <small v-show="errors.has('cnpj')" class="text-danger">
                             {{ errors.first('cnpj') }}
                         </small>
@@ -42,17 +44,46 @@
 </template>
 
 <script>
+import AwesomeMask from 'awesome-mask'
 import router from '../router'
+
 export default {
   name: 'SolicitaEmprestimo',
   data () {
     return {
-      mensagem: ''
+      mensagem: '',
+      empresa: {
+        email: '1223',
+        cnpj: ''
+      }
     }
+  },
+  // components: {TheMask},
+  directives: {
+    'mask': AwesomeMask
   },
   methods: {
     enviaSolicitacao () {
-      return router.push({name: 'home'})
+      this.resource = this.$resource('post')
+      this.$validator.validateAll().then((result) => {
+        if (result) {
+          this.resource.save(this.empresa).then(
+            success => {
+              this.mensagem = { tipo: 'success', descricao: 'Solicitação enviada com sucesso!' }
+              setTimeout(() => {
+                router.push({name: 'home'})
+              }, 2000)
+              return success
+            },
+            error => {
+              this.mensagem = { tipo: 'danger', descricao: 'Houve um erro ao realizar sua solicitação. Entre em contato com nossa central de atendimento. Obrigado!' }
+              return console.log(error)
+            }
+          )
+          return
+        }
+        this.mensagem = { tipo: 'danger', descricao: 'Favor preencher o formulário corretamente.' }
+      })
     }
   }
 }

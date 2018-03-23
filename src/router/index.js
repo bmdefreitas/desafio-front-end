@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/components/Home'
 import Simulador from '@/components/Simulador'
 import SolicitaEmprestimo from '@/components/SolicitaEmprestimo'
 
@@ -11,7 +10,7 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: Home
+      redirect: {name: 'simulador'}
     },
     {
       path: '/simulador',

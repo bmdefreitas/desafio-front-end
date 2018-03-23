@@ -68,7 +68,6 @@
 </template>
 
 <script>
-import AwesomeMask from 'awesome-mask'
 import router from '../router'
 
 export default {
@@ -81,9 +80,6 @@ export default {
       juros: 0,
       mensagem: ''
     }
-  },
-  directives: {
-    'mask': AwesomeMask
   },
   computed: {
     prestacao: function () {

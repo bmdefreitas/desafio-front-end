@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import VueResource from 'vue-resource'
 import ptBr from 'vee-validate/dist/locale/pt_BR'
 import VeeValidate, { Validator } from 'vee-validate'
 import VueCurrencyFilter from 'vue-currency-filter'
@@ -13,6 +14,9 @@ Vue.use(VueNumeric)
 Validator.localize('pt_BR', ptBr)
 
 Vue.use(VeeValidate)
+
+Vue.use(VueResource)
+Vue.http.options.root = 'http://httpbin.org/'
 
 Vue.use(VueCurrencyFilter,
   {
