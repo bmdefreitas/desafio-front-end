@@ -16,7 +16,7 @@ Validator.localize('pt_BR', ptBr)
 Vue.use(VeeValidate)
 
 Vue.use(VueResource)
-Vue.http.options.root = 'http://httpbin.org/'
+Vue.http.options.root = 'https://httpbin.org/'
 
 Vue.use(VueCurrencyFilter,
   {
