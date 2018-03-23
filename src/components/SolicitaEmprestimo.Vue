@@ -67,7 +67,9 @@ export default {
       this.resource = this.$resource('post')
       this.$validator.validateAll().then((result) => {
         if (result) {
-          this.resource.save(this.empresa).then(
+          const proposta = JSON.parse(localStorage.getItem('proposta'))
+          const empresaProposta = {empresa: this.empresa, proposta}
+          this.resource.save(empresaProposta).then(
             success => {
               this.mensagem = { tipo: 'success', descricao: 'Solicitação enviada com sucesso!' }
               setTimeout(() => {

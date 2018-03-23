@@ -16,7 +16,7 @@
                         <vue-numeric currency="R$" separator="." id="valor" name="valor" value=""
                             :class="{'form-control': true, 'is-invalid': errors.has('valor')}"
                             v-validate="'required|decimal:2|min_value:0|max_value:100000'"
-                            v-model="valor" :minus="false" :min="0" :max="100000" :precision="2" :empty-value="0">
+                            v-model="proposta.valor" :minus="false" :min="0" :max="100000" :precision="2" :empty-value="0">
                         </vue-numeric>
                         <small class="form-text text-muted">Digite um valor entre R$ 0 e R$ 100.000,00</small>
                         <small v-show="errors.has('valor')" class="text-danger">
@@ -29,7 +29,7 @@
                         <vue-numeric id="prazo" name="prazo" value=""
                             :class="{'form-control': true, 'is-invalid': errors.has('prazo')}"
                             v-validate="'required|min_value:3|max_value:12'"
-                            v-model="prazo" :minus="false" :min="3" :max="12" :empty-value="3">
+                            v-model="proposta.prazo" :minus="false" :min="3" :max="12" :empty-value="3">
                         </vue-numeric>
                         <small class="form-text text-muted">Digite um prazo entre 3 e 12 meses</small>
                         <small v-show="errors.has('prazo')" class="text-danger">
@@ -41,7 +41,7 @@
                         <label for="juros">Qual a taxa de juros (% ao mês)?*</label>
                         <vue-numeric :precision="2" :min="3" :max="8" :empty-value="3" separator="."
                             :class="{'form-control': true, 'is-invalid': errors.has('juros')}" name="juros" id="juros" value=""
-                            v-model="juros" v-validate="'required|decimal:2|min_value:3|max_value:8'">
+                            v-model="proposta.juros" v-validate="'required|decimal:2|min_value:3|max_value:8'">
                         </vue-numeric>
                         <small class="form-text text-muted">Digite um valor entre 3% e 8%</small>
                         <small v-show="errors.has('juros')" class="text-danger">
@@ -51,7 +51,7 @@
 
                     <div class="form-group" v-if="prestacao">
                         <div class="alert alert-info">
-                            Prestação: {{prazo}}x iguais de <strong>{{prestacao | currency}}</strong>.
+                            Prestação: {{proposta.prazo}}x iguais de <strong>{{prestacao | currency}}</strong>.
                         </div>
                     </div>
             </div>
@@ -75,25 +75,28 @@ export default {
 
   data () {
     return {
-      valor: 0,
-      prazo: 0,
-      juros: 0,
+      proposta: {
+        valor: 0,
+        prazo: 0,
+        juros: 0
+      },
       mensagem: ''
     }
   },
   computed: {
     prestacao: function () {
-      return this.calculoPrestacao(this.valor, this.juros, this.prazo)
+      return this.calculoPrestacao(this.proposta.valor, this.proposta.juros, this.proposta.prazo)
     }
   },
   methods: {
     solicitaEmprestimo () {
-      if (!this.valor > 0) {
+      if (!this.proposta.valor > 0) {
         this.mensagem = { tipo: 'danger', descricao: 'O valor do empréstimo tem que ser maior que 0.' }
         return
       }
       this.$validator.validateAll().then((result) => {
         if (result) {
+          localStorage.setItem('proposta', JSON.stringify(this.proposta))
           router.push({ name: 'solicita-emprestimo' })
           return
         }
