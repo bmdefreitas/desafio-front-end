@@ -2,6 +2,8 @@
 
 > A Vue.js project
 
+> https://bmdefreitas.github.io/desafio-front-end/
+
 ## Build Setup
 
 ``` bash
