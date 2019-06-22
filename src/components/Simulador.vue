@@ -28,10 +28,10 @@
                         <label for="prazo">Qual a quantidade de meses para o pagamento?*</label>
                         <vue-numeric id="prazo" name="prazo" value=""
                             :class="{'form-control': true, 'is-invalid': errors.has('prazo')}"
-                            v-validate="'required|min_value:3|max_value:12'"
-                            v-model="proposta.prazo" :minus="false" :min="3" :max="12" :empty-value="3">
+                            v-validate="'required|min_value:3|max_value:72'"
+                            v-model="proposta.prazo" :minus="false" :min="3" :max="72" :empty-value="3">
                         </vue-numeric>
-                        <small class="form-text text-muted">Digite um prazo entre 3 e 12 meses</small>
+                        <small class="form-text text-muted">Digite um prazo entre 3 e 72 meses</small>
                         <small v-show="errors.has('prazo')" class="text-danger">
                             {{ errors.first('prazo') }}
                         </small>
