@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Simulador from '@/components/Simulador'
-import SolicitaEmprestimo from '@/components/SolicitaEmprestimo'
+import Simulador from '../components/Simulador'
+import SolicitaEmprestimo from '../components/SolicitaEmprestimo'
 
 Vue.use(Router)
 
