@@ -15,10 +15,10 @@
                         <label for="valor">Qual o valor desejado para o empréstimo?*</label>
                         <vue-numeric currency="R$" separator="." id="valor" name="valor" value=""
                             :class="{'form-control': true, 'is-invalid': errors.has('valor')}"
-                            v-validate="'required|decimal:2|min_value:0|max_value:100000'"
-                            v-model="proposta.valor" :minus="false" :min="0" :max="100000" :precision="2" :empty-value="0">
+                            v-validate="'required|decimal:2|min_value:0|max_value:300000'"
+                            v-model="proposta.valor" :minus="false" :min="0" :max="300000" :precision="2" :empty-value="0">
                         </vue-numeric>
-                        <small class="form-text text-muted">Digite um valor entre R$ 0 e R$ 100.000,00</small>
+                        <small class="form-text text-muted">Digite um valor entre R$ 0 e R$ 300.000,00</small>
                         <small v-show="errors.has('valor')" class="text-danger">
                             {{ errors.first('valor') }}
                         </small>
@@ -28,10 +28,10 @@
                         <label for="prazo">Qual a quantidade de meses para o pagamento?*</label>
                         <vue-numeric id="prazo" name="prazo" value=""
                             :class="{'form-control': true, 'is-invalid': errors.has('prazo')}"
-                            v-validate="'required|min_value:3|max_value:72'"
-                            v-model="proposta.prazo" :minus="false" :min="3" :max="72" :empty-value="3">
+                            v-validate="'required|min_value:3|max_value:96'"
+                            v-model="proposta.prazo" :minus="false" :min="3" :max="96" :empty-value="3">
                         </vue-numeric>
-                        <small class="form-text text-muted">Digite um prazo entre 3 e 72 meses</small>
+                        <small class="form-text text-muted">Digite um prazo entre 3 e 96 meses</small>
                         <small v-show="errors.has('prazo')" class="text-danger">
                             {{ errors.first('prazo') }}
                         </small>
@@ -39,11 +39,11 @@
 
                     <div class="form-group">
                         <label for="juros">Qual a taxa de juros (% ao mês)?*</label>
-                        <vue-numeric :precision="2" :min="3" :max="8" :empty-value="3" separator="."
+                        <vue-numeric :precision="2" :min="1" :max="8" :empty-value="3" separator="."
                             :class="{'form-control': true, 'is-invalid': errors.has('juros')}" name="juros" id="juros" value=""
-                            v-model="proposta.juros" v-validate="'required|decimal:2|min_value:3|max_value:8'">
+                            v-model="proposta.juros" v-validate="'required|decimal:2|min_value:1|max_value:8'">
                         </vue-numeric>
-                        <small class="form-text text-muted">Digite um valor entre 3% e 8%</small>
+                        <small class="form-text text-muted">Digite um valor entre 1% e 8%</small>
                         <small v-show="errors.has('juros')" class="text-danger">
                             {{ errors.first('juros') }}
                         </small>
